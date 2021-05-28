@@ -11,8 +11,8 @@ PersonInfoView::PersonInfoView(unsigned int id,QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_pPerson = Person::getInstance();
-    m_pFamily = Family::getInstance();
+    m_pPersonRepo = PersonRepo::getInstance();
+    m_pFamilyRepo = FamilyRepo::getInstance();
 
     update();
 
@@ -31,7 +31,7 @@ void PersonInfoView::on_pushButton_mainWinReturn_clicked()
 
 void PersonInfoView::on_pushButton_goToFamilyInfo_clicked()
 {
-    int family_id = m_pFamily->getFamilyId(this->m_id);
+    int family_id = m_pFamilyRepo->getFamilyId(this->m_id);
 
     if(family_id != -1 &&
             family_id != 0)
@@ -50,25 +50,25 @@ void PersonInfoView::on_pushButton_goToFamilyInfo_clicked()
 void PersonInfoView::on_pushButton_deletePerson_clicked()
 {
     bool success = false;
-    tPerson person;
+    PersonModel person;
 
-    m_pPerson->get(&person,this->m_id);
+    m_pPersonRepo->get(&person,this->m_id);
 
-    success  = m_pPerson->remove(this->m_id);
+    success  = m_pPersonRepo->remove(this->m_id);
 
-    if(success && m_pFamily->isParent(person.id))
+    if(success && m_pFamilyRepo->isParent(person.id))
     {
-        success = m_pFamily->remove(m_pFamily->getFamilyId(person.id));
+        success = m_pFamilyRepo->remove(m_pFamilyRepo->getFamilyId(person.id));
     }
 
-    if(success && m_pFamily->isChild(person.id))
+    if(success && m_pFamilyRepo->isChild(person.id))
     {
-        success = m_pFamily->removeOneChild(person.id);
+        success = m_pFamilyRepo->removeOneChild(person.id);
     }
 
-    if(success && m_pFamily->isResident(person.id))
+    if(success && m_pFamilyRepo->isResident(person.id))
     {
-        success = m_pFamily->removeOneResident(person.id);
+        success = m_pFamilyRepo->removeOneResident(person.id);
     }
 
     if(success == true)
@@ -97,9 +97,9 @@ void PersonInfoView::updateSlot()
 
 void PersonInfoView::update(void)
 {
-    tPerson person;
+    PersonModel person;
 
-    m_pPerson->get(&person,m_id);
+    m_pPersonRepo->get(&person,m_id);
 
     ui->lineEdit_personName->setText(person.name);
     ui->lineEdit_birthPlace->setText(person.birthPlace);
@@ -110,5 +110,5 @@ void PersonInfoView::update(void)
     ui->lineEdit_personGender->setText(person.gender);
     ui->lineEdit_jobTitle->setText(person.jobTitle);
     ui->lineEdit_company->setText(person.company);
-    ui->lineEdit_personMaritalState->setText(m_pFamily->isParent(m_id) == true ? "متزوج" : "اعذب");
+    ui->lineEdit_personMaritalState->setText(m_pFamilyRepo->isParent(m_id) == true ? "متزوج" : "اعذب");
 }

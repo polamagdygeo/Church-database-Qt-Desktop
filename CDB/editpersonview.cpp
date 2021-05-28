@@ -1,4 +1,4 @@
-#include "EditPersonView.h"
+#include "editpersonview.h"
 #include "ui_editpersonview.h"
 #include "QMessageBox"
 
@@ -9,11 +9,11 @@ EditPersonView::EditPersonView(unsigned int id,QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_pPerson = Person::getInstance();
+    m_pPersonRepo = PersonRepo::getInstance();
 
-    tPerson person;
+    PersonModel person;
 
-    m_pPerson->get(&person,id);
+    m_pPersonRepo->get(&person,id);
 
     QStringList splitDate = person.birthDate.split('/');
     QDate date(splitDate[2].toInt(),splitDate[1].toInt(),splitDate[0].toInt());
@@ -63,9 +63,9 @@ void EditPersonView::on_pushButton_mainWinReturn_3_clicked()
 
 void EditPersonView::on_pushButton_editPerson_clicked()
 {
-    tPerson person;
+    PersonModel person;
 
-    m_pPerson->get(&person,m_id);
+    m_pPersonRepo->get(&person,m_id);
 
     person.birthPlace = ui->lineEdit_birthPlace_3->text();
     person.mobNo = ui->lineEdit_mobId_3->text();
@@ -75,7 +75,7 @@ void EditPersonView::on_pushButton_editPerson_clicked()
     person.company = ui->lineEdit_company_3->text();
     person.natId = ui->lineEdit_natId_3->text();
 
-    if(m_pPerson->update(&person) == true)
+    if(m_pPersonRepo->update(&person) == true)
     {
         QMessageBox::information(this," ",tr("تم!"));
         this->updateSignal();

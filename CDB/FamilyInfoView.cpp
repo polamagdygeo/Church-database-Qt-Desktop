@@ -11,8 +11,8 @@ FamilyInfoView::FamilyInfoView(int family_id,QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_pPerson = Person::getInstance();
-    m_pFamily = Family::getInstance();
+    m_pPerson = PersonRepo::getInstance();
+    m_pFamily = FamilyRepo::getInstance();
 
     this->update();
 
@@ -95,20 +95,20 @@ void FamilyInfoView::update()
     if(m_family.fatherId != -1 &&
             m_family.fatherId != 0)
     {
-        tPerson father;
+        PersonModel father;
         m_pPerson->get(&father,m_family.fatherId);
 
-        tPerson mother;
+        PersonModel mother;
         m_pPerson->get(&mother,m_family.motherId);
 
-        QList<tPerson> children;
+        QList<PersonModel> children;
         int i = 0;
-        tPerson temp;
+        PersonModel temp;
 
-        ui->tableWidget_children->setRowCount(m_family.addedChildrenList.size());
+        ui->tableWidget_children->setRowCount(m_family.childrenList.size());
         ui->tableWidget_children->setColumnCount(1);
 
-        for(auto child_id : m_family.addedChildrenList)
+        for(auto child_id : m_family.childrenList)
         {
             m_pPerson->get(&temp,child_id);
 
@@ -117,10 +117,10 @@ void FamilyInfoView::update()
             i++;
         }
 
-        QList<tPerson> resident;
+        QList<PersonModel> resident;
         QList<QString> resident_relation;
 
-        ui->tableWidget_resident->setRowCount(m_family.addedResidentList.size());
+        ui->tableWidget_resident->setRowCount(m_family.residentsList.size());
         ui->tableWidget_resident->setColumnCount(2);
 
         QStringList header;
@@ -129,7 +129,7 @@ void FamilyInfoView::update()
 
         i = 0;
 
-        for(auto resident_id : m_family.addedResidentList)
+        for(auto resident_id : m_family.residentsList)
         {
             m_pPerson->get(&temp,resident_id.first);
 

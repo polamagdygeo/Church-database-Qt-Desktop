@@ -2,9 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "Person.h"
-#include "Family.h"
-#include "Visits.h"
+#include "PersonRepo.h"
+#include "FamilyRepo.h"
+#include "VisitsRepo.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -41,8 +41,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Person* pPerson;
-    Family* pFamily;
-    Visits* pVisits;
+    PersonRepo* pPerson;
+    FamilyRepo* pFamily;
+    VisitsRepo* pVisits;
 };
 #endif // MAINWINDOW_H

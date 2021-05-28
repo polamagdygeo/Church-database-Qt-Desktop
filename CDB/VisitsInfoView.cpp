@@ -9,8 +9,8 @@ VisitsInfoView::VisitsInfoView(int family_id,QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_pPerson = Person::getInstance();
-    m_pVisits = Visits::getInstance();
+    m_pPersonRepo = PersonRepo::getInstance();
+    m_pVisitsRepo = VisitsRepo::getInstance();
 
     this->update();
 
@@ -44,7 +44,7 @@ void VisitsInfoView::on_pushButton_deleteVisit_clicked()
     {
         int selected_id = m_visitsList[ui->tableWidget_visits->currentRow()].visitId;
 
-        if(m_pVisits->remove(selected_id))
+        if(m_pVisitsRepo->remove(selected_id))
         {
             this->update();
         }
@@ -55,7 +55,7 @@ void VisitsInfoView::update()
 {
     m_visitsList.clear();
 
-    m_pVisits->getForFamily(m_familyId,m_visitsList);
+    m_pVisitsRepo->getForFamily(m_familyId,m_visitsList);
 
     ui->tableWidget_visits->setRowCount(m_visitsList.size());
     ui->tableWidget_visits->setColumnCount(2);
@@ -68,9 +68,9 @@ void VisitsInfoView::update()
 
     for(auto visit : m_visitsList)
     {
-        tPerson priest;
+        PersonModel priest;
 
-        m_pPerson->get(&priest,visit.priestId);
+        m_pPersonRepo->get(&priest,visit.priestId);
 
         ui->tableWidget_visits->setItem(i,0, new QTableWidgetItem(priest.name));
 

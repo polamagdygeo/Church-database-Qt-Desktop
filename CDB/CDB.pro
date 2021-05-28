@@ -20,13 +20,13 @@ SOURCES += \
     AddPersonView.cpp \
     AddVisitView.cpp \
     EditFamilyView.cpp \
-    Family.cpp \
     FamilyInfoView.cpp \
     FamilyOpAbstractView.cpp \
-    Person.cpp \
+    FamilyRepo.cpp \
     PersonInfoView.cpp \
-    Visits.cpp \
+    PersonRepo.cpp \
     VisitsInfoView.cpp \
+    VisitsRepo.cpp \
     db.cpp \
     editpersonview.cpp \
     main.cpp \
@@ -38,14 +38,14 @@ HEADERS += \
     AddVisitView.h \
     DbInfo.h \
     EditFamilyView.h \
-    Family.h \
     FamilyInfoView.h \
     FamilyOpAbstractView.h \
+    FamilyRepo.h \
     MainWindowView.h \
-    Person.h \
     PersonInfoView.h \
-    Visits.h \
+    PersonRepo.h \
     VisitsInfoView.h \
+    VisitsRepo.h \
     db.h \
     editpersonview.h
 

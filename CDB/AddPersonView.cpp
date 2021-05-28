@@ -25,7 +25,7 @@ AddPersonView::AddPersonView(QWidget *parent) :
 
     ui->lineEdit_mobId->setValidator(new QRegularExpressionValidator(number_reg_expr,this));
 
-    m_pPerson = Person::getInstance();
+    m_pPersonRepo = PersonRepo::getInstance();
 
     connect( this, SIGNAL(updateSignal()), parentWidget(), SLOT(updateSlot()) );
 }
@@ -58,7 +58,7 @@ void AddPersonView::on_pushButton_addPerson_clicked()
         m_person.jobTitle = ui->checkBox->checkState() == Qt::Checked ? "كاهن" : ui->lineEdit_jobTitle->text();
         m_person.company = ui->lineEdit_company->text();
 
-        if(m_pPerson->append(&m_person) == true)
+        if(m_pPersonRepo->append(&m_person) == true)
         {
             resetView();
 

@@ -2,8 +2,8 @@
 #define EDITFAMILYVIEW_H
 
 #include <QDialog>
-#include <Family.h>
-#include "Person.h"
+#include <FamilyRepo.h>
+#include "PersonRepo.h"
 #include <FamilyOpAbstractView.h>
 
 namespace Ui {

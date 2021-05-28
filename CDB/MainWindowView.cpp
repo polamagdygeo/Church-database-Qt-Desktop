@@ -10,9 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
       QMainWindow(parent)
 {
     ui->setupUi(this);
-    pPerson = Person::getInstance();
-    pFamily = Family::getInstance();
-    pVisits = Visits::getInstance();
+    pPerson = PersonRepo::getInstance();
+    pFamily = FamilyRepo::getInstance();
+    pVisits = VisitsRepo::getInstance();
 
     QRegularExpression name("([ئءؤلألاآأ-ي]+[ ]){4}([ئءؤلألاآأ-ي]+){1}");
 

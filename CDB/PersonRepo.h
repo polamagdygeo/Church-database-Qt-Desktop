@@ -4,7 +4,8 @@
 #include <QtSql>
 #include <string.h>
 
-struct tPerson{
+/*person data class model*/
+struct PersonModel{
     int id;
     QString name;
     QString birthPlace;
@@ -15,13 +16,14 @@ struct tPerson{
     QString gender;
     QString jobTitle;
     QString company;
-    bool operator==(const tPerson& other)
+    bool operator==(const PersonModel& other)
     {
         return name == other.name ? true : false;
     }
 };
 
-class Person
+/*Provide storage operations for person data class*/
+class PersonRepo
 {
 public:
     typedef enum{
@@ -33,19 +35,19 @@ public:
         JOB_NON_PRIEST
     }tJob;
 
-    bool append(const tPerson* pP);
+    bool append(const struct PersonModel* pP);
     void getNamesAlikesIntoModel(QSqlQueryModel* pModel,QString name);
-    bool get(tPerson* pPerson,unsigned int id);
+    bool get(PersonModel* pPerson,unsigned int id);
     bool remove(unsigned int id);
-    QList<tPerson> getAll(tGender g);
-    QList<tPerson> getAll(tJob j);
-    QList<tPerson> getAll(void);
-    bool update(tPerson *pP);
-    static Person *getInstance(void);
+    QList<PersonModel> getAll(tGender g);
+    QList<PersonModel> getAll(tJob j);
+    QList<PersonModel> getAll(void);
+    bool update(PersonModel *pP);
+    static PersonRepo *getInstance(void);
 private:
-    Person();
+    PersonRepo();
     static QSqlDatabase* pDB;
-    static Person *pPerson;
+    static PersonRepo *m_pPerson;
 };
 
 #endif // PERSONMODEL_H

@@ -8,8 +8,8 @@ AddFamilyView::AddFamilyView(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_pPerson = Person::getInstance();
-    m_pFamily = Family::getInstance();
+    m_pPersonRepo = PersonRepo::getInstance();
+    m_pFamilyRepo = FamilyRepo::getInstance();
 
     getAllPersons();
 
@@ -65,8 +65,8 @@ void AddFamilyView::updatePossibleFathersList()
 
     for(auto person : m_persons)
     {
-        if(person.first.gender == Person::GENDER_MALE &&
-                m_pFamily->isParent(person.first.id) == false &&
+        if(person.first.gender == PersonRepo::GENDER_MALE &&
+                m_pFamilyRepo->isParent(person.first.id) == false &&
                 (person.second == false || person.first == m_father))
         {
            ui->comboBox_fatherName->addItem(person.first.name);
@@ -96,8 +96,8 @@ void AddFamilyView::updatePossibleMothersList()
 
     for(auto person : m_persons)
     {
-        if(person.first.gender == Person::GENDER_FEMALE &&
-                m_pFamily->isParent(person.first.id) == false &&
+        if(person.first.gender == PersonRepo::GENDER_FEMALE &&
+                m_pFamilyRepo->isParent(person.first.id) == false &&
                 (person.second == false || person.first == m_mother))
         {
            ui->comboBox_motherName->addItem(person.first.name);
@@ -183,7 +183,7 @@ void AddFamilyView::on_pushButton_addFamily_clicked()
             {
                 for(auto child : m_addedChildList)
                 {
-                    m_family.addedChildrenList.append(child.id);
+                    m_family.childrenList.append(child.id);
                 }
             }
 
@@ -191,14 +191,14 @@ void AddFamilyView::on_pushButton_addFamily_clicked()
             {
                 for(auto resident : m_addedResidentList)
                 {
-                    m_family.addedResidentList.append(qMakePair(resident.first.id,resident.second));
+                    m_family.residentsList.append(qMakePair(resident.first.id,resident.second));
                 }
             }
 
-            if(m_pFamily->append(&m_family) == true)
+            if(m_pFamilyRepo->append(&m_family) == true)
             {
-                m_pFamily->removeOneResident(m_father.id);
-                m_pFamily->removeOneResident(m_mother.id);
+                m_pFamilyRepo->removeOneResident(m_father.id);
+                m_pFamilyRepo->removeOneResident(m_mother.id);
 
                 QMessageBox::information(this," ",tr("تم!"));
 
@@ -227,7 +227,7 @@ void AddFamilyView::on_comboBox_fatherName_currentIndexChanged(int index)
     {
         m_fatherSelected = true;
 
-        tPerson old_father = m_father;
+        PersonModel old_father = m_father;
         m_father = m_possibleFatherList[index];
 
         for(auto& person : m_persons)
@@ -250,7 +250,7 @@ void AddFamilyView::on_comboBox_motherName_currentIndexChanged(int index)
     if(index >= 0 &&
             m_possibleMotherList.size() > 0)
     {
-       tPerson old_mother = m_mother;
+       PersonModel old_mother = m_mother;
        m_mother = m_possibleMotherList[index];
 
        for(auto& person : m_persons)

@@ -2,9 +2,9 @@
 #define FAMILYINFOVIEW_H
 
 #include <QDialog>
-#include "Family.h"
-#include "Visits.h"
-#include "Person.h"
+#include "FamilyRepo.h"
+#include "VisitsRepo.h"
+#include "PersonRepo.h"
 
 namespace Ui {
 class FamilyInfoView;
@@ -34,9 +34,9 @@ signals:
 
 private:
     Ui::FamilyInfoView *ui;
-    Family* m_pFamily;
-    Person* m_pPerson;
-    tFamily m_family;
+    FamilyRepo* m_pFamily;
+    PersonRepo* m_pPerson;
+    FamilyModel m_family;
     int m_familyId;
     void update();
 };

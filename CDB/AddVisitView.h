@@ -2,8 +2,8 @@
 #define ADDVISIT_H
 
 #include <QDialog>
-#include "Visits.h"
-#include "Person.h"
+#include "VisitsRepo.h"
+#include "PersonRepo.h"
 
 namespace Ui {
 class AddVisit;
@@ -29,10 +29,10 @@ signals:
 
 private:
     Ui::AddVisit *ui;
-    Visits *m_pVisits;
-    Person *m_pPerson;
+    VisitsRepo *m_pVisitsRepo;
+    PersonRepo *m_pPersonRepo;
     int m_family_id;
-    QList<tPerson> m_priestsList;
+    QList<PersonModel> m_priestsList;
     void resetView();
 };
 

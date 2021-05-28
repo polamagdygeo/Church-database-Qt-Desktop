@@ -9,27 +9,27 @@ EditFamilyView::EditFamilyView(int family_id,QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_pPerson = Person::getInstance();
-    m_pFamily = Family::getInstance();
+    m_pPersonRepo = PersonRepo::getInstance();
+    m_pFamilyRepo = FamilyRepo::getInstance();
 
     getAllPersons();
 
-    m_family = m_pFamily->get(family_id);
+    m_family = m_pFamilyRepo->get(family_id);
 
     if(m_family.fatherId != -1 &&
             m_family.fatherId != 0)
     {
-        m_pPerson->get(&m_father,m_family.fatherId);
+        m_pPersonRepo->get(&m_father,m_family.fatherId);
 
-        m_pPerson->get(&m_mother,m_family.motherId);
+        m_pPersonRepo->get(&m_mother,m_family.motherId);
 
-        tPerson temp;
+        PersonModel temp;
 
-        if(m_family.addedChildrenList.length() > 0)
+        if(m_family.childrenList.length() > 0)
         {
-            for(auto child_id : m_family.addedChildrenList)
+            for(auto child_id : m_family.childrenList)
             {
-                m_pPerson->get(&temp,child_id);
+                m_pPersonRepo->get(&temp,child_id);
 
                 m_addedChildList.append(temp);
             }
@@ -38,11 +38,11 @@ EditFamilyView::EditFamilyView(int family_id,QWidget *parent) :
         }
         updatePossibleChildrenList(ui->comboBox_toAddChildName_3);
 
-        if(m_family.addedResidentList.length() > 0)
+        if(m_family.residentsList.length() > 0)
         {
-            for(auto resident_id : m_family.addedResidentList)
+            for(auto resident_id : m_family.residentsList)
             {
-                m_pPerson->get(&temp,resident_id.first);
+                m_pPersonRepo->get(&temp,resident_id.first);
 
                 m_addedResidentList.append(qMakePair(temp,resident_id.second));
             }
@@ -144,28 +144,28 @@ void EditFamilyView::on_pushButton_applyFamilyEdit_clicked()
         m_family.resiedenceType = ui->lineEdit_residenceType_3->text();
         m_family.note = ui->textEdit_note_3->toPlainText();
 
-        m_pFamily->removeAllChildren(m_family.id);
-        m_pFamily->removeAllResidents(m_family.id);
+        m_pFamilyRepo->removeAllChildren(m_family.id);
+        m_pFamilyRepo->removeAllResidents(m_family.id);
 
-        m_family.addedChildrenList.clear();
+        m_family.childrenList.clear();
         if(m_addedChildList.size() > 0)
         {
             for(auto child : m_addedChildList)
             {
-                m_family.addedChildrenList.append(child.id);
+                m_family.childrenList.append(child.id);
             }
         }
 
-        m_family.addedResidentList.clear();
+        m_family.residentsList.clear();
         if(m_addedResidentList.size() > 0)
         {
             for(auto resident : m_addedResidentList)
             {
-                m_family.addedResidentList.append(qMakePair(resident.first.id,resident.second));
+                m_family.residentsList.append(qMakePair(resident.first.id,resident.second));
             }
         }
 
-        if(m_pFamily->update(&m_family) == true)
+        if(m_pFamilyRepo->update(&m_family) == true)
         {
             QMessageBox::information(this," ",tr("تم!"));
 

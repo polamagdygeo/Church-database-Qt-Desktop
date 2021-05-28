@@ -5,11 +5,12 @@
 #include <QDebug>
 #include <list>
 
-typedef struct{
+struct FamilyModel{
+    int id;
     int fatherId;
     int motherId;
-    QList<int> addedChildrenList;
-    QList<QPair<int,QString>> addedResidentList;
+    QList<int> childrenList;
+    QList<QPair<int,QString>> residentsList;
     QString note;
     QString flatNo;
     QString buildingNo;
@@ -17,25 +18,25 @@ typedef struct{
     QString blockNo;
     QString neighbourhoodNo;
     QString resiedenceType;
-    int id;
-}tFamily;
+};
 
-class Family
+/*Provide storage operations for family model*/
+class FamilyRepo
 {
 public:
-    bool append(tFamily *pF);
+    bool append(FamilyModel *pF);
     int getFamilyId(int father_id,int mother_id);
     bool addChildrenList(QList<int> children_list,int family_id);
     bool addResidentsList(QList<QPair<int,QString>> resident_list,int family_id);
     int getFamilyId(int person_id);
     bool removeOneResident(int resident_id);
-    tFamily get(int family_id);
+    FamilyModel get(int family_id);
     QList<int> getChildrenList(int family_id);
     QList<QPair<int,QString>> getResidentList(int family_id);
     bool remove(int family_id);
     bool removeOneChild(int child_id);
-    static Family *getInstance(void);
-    bool update(tFamily *pF);
+    static FamilyRepo *getInstance(void);
+    bool update(FamilyModel *pF);
     QSqlRelationalTableModel *getFamiliesByZoneIntoModel(QString neigbourhood,QString blockNo);
     bool removeAllResidents(int family_id);
     bool removeAllChildren(int family_id);
@@ -46,9 +47,9 @@ public:
     bool appendParents(int father_id,int mother_id,int family_id);
     bool removeParents(int family_id);
 private:
-    Family();
+    FamilyRepo();
     static QSqlDatabase* m_pDB;
-    static Family *m_pFamily;
+    static FamilyRepo *m_pFamily;
 };
 
 #endif // FAMILYMODEL_H

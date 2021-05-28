@@ -2,8 +2,8 @@
 #define ADDFAMILY_H
 
 #include <QDialog>
-#include <Person.h>
-#include <Family.h>
+#include <PersonRepo.h>
+#include <FamilyRepo.h>
 #include <FamilyOpAbstractView.h>
 
 namespace Ui {
@@ -50,7 +50,7 @@ private:
     Ui::AddFamilyView *ui;
     bool m_fatherSelected;
     bool m_motherSelected;
-    QList<tPerson> m_possibleFatherList;
-    QList<tPerson> m_possibleMotherList;
+    QList<PersonModel> m_possibleFatherList;
+    QList<PersonModel> m_possibleMotherList;
 };
 #endif // ADDFAMILY_H

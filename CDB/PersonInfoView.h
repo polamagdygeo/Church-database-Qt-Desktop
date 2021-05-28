@@ -2,9 +2,9 @@
 #define PERSONINFOVIEW_H
 
 #include <QDialog>
-#include "Person.h"
-#include "Family.h"
-#include "Visits.h"
+#include "PersonRepo.h"
+#include "FamilyRepo.h"
+#include "VisitsRepo.h"
 
 namespace Ui {
 class PersonInfoView;
@@ -33,8 +33,8 @@ signals:
 
 private:
     Ui::PersonInfoView *ui;
-    Person* m_pPerson;
-    Family* m_pFamily;
+    PersonRepo* m_pPersonRepo;
+    FamilyRepo* m_pFamilyRepo;
     unsigned int m_id;
     void update(void);
 };

@@ -9,11 +9,11 @@ AddVisitView::AddVisitView(int family_id,QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_pPerson = Person::getInstance();
-    m_pVisits = Visits::getInstance();
+    m_pPersonRepo = PersonRepo::getInstance();
+    m_pVisitsRepo = VisitsRepo::getInstance();
 
     /*Get priest and set to combo box*/
-    m_priestsList = m_pPerson->getAll(Person::JOB_PRIEST);
+    m_priestsList = m_pPersonRepo->getAll(PersonRepo::JOB_PRIEST);
 
     QRegularExpression name("([ئءؤلألاآأ-ي]+[ ]){4}([ئءؤلألاآأ-ي]+){1}");
 
@@ -54,12 +54,12 @@ void AddVisitView::on_pushButton_addVisit_2_clicked()
     {
         auto priest = m_priestsList[priest_idx];
 
-        tVisit visit;
+        VisitModel visit;
         visit.date = ui->dateEdit_2->text();
         visit.familyId = m_family_id;
         visit.priestId = priest.id;
 
-        if(m_pVisits->append(visit) == true)
+        if(m_pVisitsRepo->append(visit) == true)
         {
             QMessageBox::information(this," ",tr("تم!"));
 

@@ -1,40 +1,47 @@
-#include "Visits.h"
+#include "VisitsRepo.h"
 #include "db.h"
 
-QSqlDatabase* Visits::m_pDB = 0;
-Visits *Visits::m_pVisits = 0;
+QSqlDatabase* VisitsRepo::m_pDB = 0;
+VisitsRepo *VisitsRepo::m_pVisits = 0;
 
-Visits::Visits()
+VisitsRepo::VisitsRepo()
 {
 }
 
-Visits *Visits::getInstance()
+VisitsRepo *VisitsRepo::getInstance()
 {
     if(m_pVisits == 0)
     {
-        m_pDB = db::getInstance();
-        m_pDB->open();
+        m_pVisits = new VisitsRepo;
 
-        QSqlQuery query;
-
-        if(!query.exec("CREATE TABLE visits"
-                  "(visit_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                   "family_id INTEGER,"
-                   "priest_id INTEGER,"
-                   "date DATETIME,"
-                   "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id),"
-                   "CONSTRAINT fk_person FOREIGN KEY (priest_id) REFERENCES person(person_id));"))
+        if(m_pVisits)
         {
-            qDebug() << "error while creating visists table" <<query.lastError() <<endl;
-        }
+            m_pDB = db::getInstance();
 
-        m_pDB->close();
+        //    m_pDB->open();
+
+        //    QSqlQuery query;
+
+        //    if(!query.exec("CREATE TABLE visits"
+        //              "(visit_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        //               "family_id INTEGER,"
+        //               "priest_id INTEGER,"
+        //               "date DATETIME,"
+        //               "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id),"
+        //               "CONSTRAINT fk_person FOREIGN KEY (priest_id) REFERENCES person(person_id));"))
+        //    {
+        //        qDebug() << "error while creating visists table" <<query.lastError() <<endl;
+        //    }
+
+        //    m_pDB->close();
+        }
     }
+
 
     return m_pVisits;
 }
 
-bool Visits::append(tVisit& visit)
+bool VisitsRepo::append(VisitModel& visit)
 {
     bool ret = false;
     m_pDB->open();
@@ -59,7 +66,7 @@ bool Visits::append(tVisit& visit)
     return ret;
 }
 
-bool Visits::getForFamily(int family_id,QList<tVisit> &visits_list)
+bool VisitsRepo::getForFamily(int family_id,QList<VisitModel> &visits_list)
 {
     bool ret = false;
     m_pDB->open();
@@ -76,7 +83,7 @@ bool Visits::getForFamily(int family_id,QList<tVisit> &visits_list)
         {
               QSqlRecord pRes = query.record();
 
-              tVisit temp;
+              VisitModel temp;
 
               temp.visitId = pRes.value(pRes.indexOf("visit_id")).toInt();
               temp.priestId = pRes.value(pRes.indexOf("priest_id")).toInt();
@@ -94,7 +101,7 @@ bool Visits::getForFamily(int family_id,QList<tVisit> &visits_list)
     return ret;
 }
 
-bool Visits::remove(unsigned int id)
+bool VisitsRepo::remove(unsigned int id)
 {
     bool ret = false;
     m_pDB->open();

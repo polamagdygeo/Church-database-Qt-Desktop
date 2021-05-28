@@ -2,7 +2,7 @@
 #define EDITPERSONVIEW_H
 
 #include <QDialog>
-#include "Person.h"
+#include "PersonRepo.h"
 
 namespace Ui {
 class EditPersonView;
@@ -28,7 +28,7 @@ signals:
 
 private:
     Ui::EditPersonView *ui;
-    Person* m_pPerson;
+    PersonRepo* m_pPersonRepo;
     unsigned int m_id;
 };
 

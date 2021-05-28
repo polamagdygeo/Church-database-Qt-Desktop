@@ -1,8 +1,8 @@
 #ifndef FAMILYOPABSTRACTVIEW_H
 #define FAMILYOPABSTRACTVIEW_H
 
-#include "Family.h"
-#include "Person.h"
+#include "FamilyRepo.h"
+#include "PersonRepo.h"
 
 class FamilyOpAbstractView
 {
@@ -35,16 +35,16 @@ protected:
                                                             QComboBox *toAddedResident,
                                                             QComboBox *toDeleteResident);
 
-    Family* m_pFamily;
-    Person* m_pPerson;
-    QList<QPair<tPerson,bool>> m_persons;
-    tFamily m_family;
-    tPerson m_father;
-    tPerson m_mother;
-    QList<tPerson> m_possibleChildList;
-    QList<tPerson> m_possibleResidentList;
-    QList<tPerson> m_addedChildList;
-    QList<QPair<tPerson,QString>> m_addedResidentList;
+    FamilyRepo* m_pFamilyRepo;
+    PersonRepo* m_pPersonRepo;
+    QList<QPair<PersonModel,bool>> m_persons;
+    FamilyModel m_family;
+    PersonModel m_father;
+    PersonModel m_mother;
+    QList<PersonModel> m_possibleChildList;
+    QList<PersonModel> m_possibleResidentList;
+    QList<PersonModel> m_addedChildList;
+    QList<QPair<PersonModel,QString>> m_addedResidentList;
 
 
 };

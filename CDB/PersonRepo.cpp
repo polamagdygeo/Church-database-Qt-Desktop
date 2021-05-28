@@ -1,49 +1,55 @@
-#include "Person.h"
+#include "PersonRepo.h"
 #include "db.h"
 
-QSqlDatabase* Person::pDB = 0;
-Person *Person::pPerson = 0;
+QSqlDatabase* PersonRepo::pDB = 0;
+PersonRepo *PersonRepo::m_pPerson = 0;
 
-Person::Person()
+PersonRepo::PersonRepo()
 {
 
 }
 
-Person *Person::getInstance()
+PersonRepo *PersonRepo::getInstance()
 {
-    if(pPerson == 0)
+    if(m_pPerson == 0)
     {
-        pDB = db::getInstance();
-        pDB->open();
+        m_pPerson = new PersonRepo;
 
-        QSqlQuery query;
-
-        if(!query.exec("CREATE TABLE person ("
-                    "person_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-                    "name VARCHAR(20) NOT NULL,"
-                    "nat_id TEXT,"
-                    "birth_date DATETIME,"
-                    "birth_place TEXT,"
-                    "job_title TEXT,"
-                    "company TEXT,"
-                    "mobile_no TEXT,"
-                    "is_live BOOL,"
-                    "family_id INTEGER,"
-                    "marriage_place TEXT,"
-                    "education TEXT,"
-                    "gender TEXT,"
-                    "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id));"))
+        if(m_pPerson)
         {
-            qDebug() << "error while creating person table :" <<query.lastError() << endl;
-        }
+            pDB = db::getInstance();
 
-        pDB->close();
+        //    pDB->open();
+
+        //    QSqlQuery query;
+
+        //    if(!query.exec("CREATE TABLE person ("
+        //                "person_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+        //                "name VARCHAR(20) NOT NULL,"
+        //                "nat_id TEXT,"
+        //                "birth_date DATETIME,"
+        //                "birth_place TEXT,"
+        //                "job_title TEXT,"
+        //                "company TEXT,"
+        //                "mobile_no TEXT,"
+        //                "is_live BOOL,"
+        //                "family_id INTEGER,"
+        //                "marriage_place TEXT,"
+        //                "education TEXT,"
+        //                "gender TEXT,"
+        //                "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id));"))
+        //    {
+        //        qDebug() << "error while creating person table :" <<query.lastError() << endl;
+        //    }
+
+        //    pDB->close();
+        }
     }
 
-    return pPerson;
+    return m_pPerson;
 }
 
-bool Person::append(const tPerson* pP)
+bool PersonRepo::append(const PersonModel* pP)
 {
     bool ret = false;
     pDB->open();
@@ -63,7 +69,7 @@ bool Person::append(const tPerson* pP)
     return ret;
 }
 
-void Person::getNamesAlikesIntoModel(QSqlQueryModel* pModel,QString name)
+void PersonRepo::getNamesAlikesIntoModel(QSqlQueryModel* pModel,QString name)
 {
     pDB->open();
     QSqlQuery query;
@@ -80,7 +86,7 @@ void Person::getNamesAlikesIntoModel(QSqlQueryModel* pModel,QString name)
     pDB->close();
 }
 
-bool Person::get(tPerson* pPerson,unsigned int id)
+bool PersonRepo::get(PersonModel* pPerson,unsigned int id)
 {
     bool ret = false;
     pDB->open();
@@ -118,7 +124,7 @@ bool Person::get(tPerson* pPerson,unsigned int id)
     return ret;
 }
 
-bool Person::remove(unsigned int id)
+bool PersonRepo::remove(unsigned int id)
 {
     bool ret = false;
     pDB->open();
@@ -139,7 +145,7 @@ bool Person::remove(unsigned int id)
     return ret;
 }
 
-QList<tPerson> Person::getAll(tJob j)
+QList<PersonModel> PersonRepo::getAll(tJob j)
 {
     pDB->open();
     QSqlQuery query;
@@ -147,8 +153,8 @@ QList<tPerson> Person::getAll(tJob j)
     query.prepare("SELECT person_id,name from person where job_title = :j");
     query.bindValue(":j",j == JOB_PRIEST ? "كاهن" : "");
 
-    tPerson temp_person;
-    QList<tPerson> ret_list;
+    PersonModel temp_person;
+    QList<PersonModel> ret_list;
 
     if(query.exec())
     {
@@ -172,7 +178,7 @@ QList<tPerson> Person::getAll(tJob j)
     return ret_list;
 }
 
-QList<tPerson> Person::getAll(tGender g)
+QList<PersonModel> PersonRepo::getAll(tGender g)
 {
     pDB->open();
     QSqlQuery query;
@@ -180,8 +186,8 @@ QList<tPerson> Person::getAll(tGender g)
     query.prepare("SELECT person_id,name from person where gender = :g");
     query.bindValue(":g",g == GENDER_MALE ? "ذكر" : "انثي");
 
-    tPerson temp_person;
-    QList<tPerson> ret_list;
+    PersonModel temp_person;
+    QList<PersonModel> ret_list;
 
     if(query.exec())
     {
@@ -207,14 +213,14 @@ QList<tPerson> Person::getAll(tGender g)
 }
 
 
-QList<tPerson> Person::getAll(void)
+QList<PersonModel> PersonRepo::getAll(void)
 {
     pDB->open();
     QSqlQuery query;
 
     query.prepare("SELECT person_id,name,gender from person");
-    tPerson temp_person;
-    QList<tPerson> ret_list;
+    PersonModel temp_person;
+    QList<PersonModel> ret_list;
 
     if(query.exec())
     {
@@ -247,7 +253,7 @@ QList<tPerson> Person::getAll(void)
     return ret_list;
 }
 
-bool Person::update(tPerson *pP)
+bool PersonRepo::update(PersonModel *pP)
 {
     bool ret = true;
     pDB->open();

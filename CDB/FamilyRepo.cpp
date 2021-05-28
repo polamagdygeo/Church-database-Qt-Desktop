@@ -1,77 +1,83 @@
-#include "Family.h"
+#include "FamilyRepo.h"
 #include "db.h"
 
-QSqlDatabase* Family::m_pDB = 0;
-Family *Family::m_pFamily = 0;
+QSqlDatabase* FamilyRepo::m_pDB = 0;
+FamilyRepo *FamilyRepo::m_pFamily = 0;
 
-Family::Family()
+FamilyRepo::FamilyRepo()
 {
 
 }
 
-Family *Family::getInstance()
+FamilyRepo *FamilyRepo::getInstance()
 {
     if(m_pFamily == 0)
     {
-        m_pDB = db::getInstance();
-        m_pDB->open();
+        m_pFamily = new FamilyRepo;
 
-        QSqlQuery query;
-
-        if(!query.exec("CREATE TABLE family"
-                  "(family_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-                   "father_id INTEGER NOT NULL,"
-                   "mother_id INTEGER NOT NULL,"
-                   "children_no INTEGER,"
-                   "note TEXT,"
-                   "flat_no TEXT,"
-                   "building_no TEXT,"
-                   "entrance_no TEXT,"
-                   "block_no TEXT,"
-                   "neighbourhood_no TEXT,"
-                   "resiedence_type TEXT,"
-                   "CONSTRAINT fk_person FOREIGN KEY (father_id,mother_id) REFERENCES person(person_id,person_id));"))
+        if(m_pFamily)
         {
-            qDebug() << "error while creating family table" <<query.lastError() << endl;
-        }
+            m_pDB = db::getInstance();
 
-        if(!query.exec("CREATE TABLE family_children"
-                  "(child_id INTEGER,"
-                   "family_id INTEGER,"
-                   "CONSTRAINT fk_person FOREIGN KEY (child_id) REFERENCES person(person_id),"
-                   "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id));"))
-        {
-            qDebug() << "error while creating family_children table" <<query.lastError() <<endl;
-        }
+        //    m_pDB->open();
 
-        if(!query.exec("CREATE TABLE family_resident"
-                  "(resident_id INTEGER,"
-                   "family_id INTEGER,"
-                   "non_child_relation TEXT,"
-                   "CONSTRAINT fk_person FOREIGN KEY (resident_id) REFERENCES person(person_id),"
-                   "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id));"))
-        {
-            qDebug() << "error while creating family_resident table" <<query.lastError() <<endl;
-        }
+        //    QSqlQuery query;
 
-        if(!query.exec("CREATE TABLE family_parents"
-                  "(father_id INTEGER,"
-                   "mother_id INTEGER,"
-                   "family_id INTEGER,"
-                   "CONSTRAINT fk_person FOREIGN KEY (father_id) REFERENCES person(person_id),"
-                   "CONSTRAINT fk_person FOREIGN KEY (mother_id) REFERENCES person(person_id),"
-                   "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id));"))
-        {
-            qDebug() << "error while creating family_resident table" <<query.lastError() <<endl;
-        }
+        //    if(!query.exec("CREATE TABLE family"
+        //              "(family_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+        //               "father_id INTEGER NOT NULL,"
+        //               "mother_id INTEGER NOT NULL,"
+        //               "children_no INTEGER,"
+        //               "note TEXT,"
+        //               "flat_no TEXT,"
+        //               "building_no TEXT,"
+        //               "entrance_no TEXT,"
+        //               "block_no TEXT,"
+        //               "neighbourhood_no TEXT,"
+        //               "resiedence_type TEXT,"
+        //               "CONSTRAINT fk_person FOREIGN KEY (father_id,mother_id) REFERENCES person(person_id,person_id));"))
+        //    {
+        //        qDebug() << "error while creating family table" <<query.lastError() << endl;
+        //    }
 
-        m_pDB->close();
+        //    if(!query.exec("CREATE TABLE family_children"
+        //              "(child_id INTEGER,"
+        //               "family_id INTEGER,"
+        //               "CONSTRAINT fk_person FOREIGN KEY (child_id) REFERENCES person(person_id),"
+        //               "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id));"))
+        //    {
+        //        qDebug() << "error while creating family_children table" <<query.lastError() <<endl;
+        //    }
+
+        //    if(!query.exec("CREATE TABLE family_resident"
+        //              "(resident_id INTEGER,"
+        //               "family_id INTEGER,"
+        //               "non_child_relation TEXT,"
+        //               "CONSTRAINT fk_person FOREIGN KEY (resident_id) REFERENCES person(person_id),"
+        //               "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id));"))
+        //    {
+        //        qDebug() << "error while creating family_resident table" <<query.lastError() <<endl;
+        //    }
+
+        //    if(!query.exec("CREATE TABLE family_parents"
+        //              "(father_id INTEGER,"
+        //               "mother_id INTEGER,"
+        //               "family_id INTEGER,"
+        //               "CONSTRAINT fk_person FOREIGN KEY (father_id) REFERENCES person(person_id),"
+        //               "CONSTRAINT fk_person FOREIGN KEY (mother_id) REFERENCES person(person_id),"
+        //               "CONSTRAINT fk_family FOREIGN KEY (family_id) REFERENCES family(family_id));"))
+        //    {
+        //        qDebug() << "error while creating family_resident table" <<query.lastError() <<endl;
+        //    }
+
+        //    m_pDB->close();
+        }
     }
 
     return m_pFamily;
 }
 
-int Family::getFamilyId(int father_id,int mother_id)
+int FamilyRepo::getFamilyId(int father_id,int mother_id)
 {
     int family_id = -1;
     m_pDB->open();
@@ -98,7 +104,7 @@ int Family::getFamilyId(int father_id,int mother_id)
     return family_id;
 }
 
-bool Family::addChildrenList(QList<int> children_list,int family_id)
+bool FamilyRepo::addChildrenList(QList<int> children_list,int family_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -134,7 +140,7 @@ bool Family::addChildrenList(QList<int> children_list,int family_id)
     return ret;
 }
 
-bool Family::addResidentsList(QList<QPair<int,QString>> resident_list,int family_id)
+bool FamilyRepo::addResidentsList(QList<QPair<int,QString>> resident_list,int family_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -171,7 +177,7 @@ bool Family::addResidentsList(QList<QPair<int,QString>> resident_list,int family
     return ret;
 }
 
-bool Family::removeAllChildren(int fam_id)
+bool FamilyRepo::removeAllChildren(int fam_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -194,7 +200,7 @@ bool Family::removeAllChildren(int fam_id)
     return ret;
 }
 
-bool Family::removeAllResidents(int fam_id)
+bool FamilyRepo::removeAllResidents(int fam_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -218,7 +224,7 @@ bool Family::removeAllResidents(int fam_id)
     return ret;
 }
 
-bool Family::removeAllVisits(int fam_id)
+bool FamilyRepo::removeAllVisits(int fam_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -241,7 +247,7 @@ bool Family::removeAllVisits(int fam_id)
     return ret;
 }
 
-int Family::getFamilyId(int person_id)
+int FamilyRepo::getFamilyId(int person_id)
 {
     bool isFound = false;
     int ret = -1;
@@ -324,7 +330,7 @@ int Family::getFamilyId(int person_id)
     return ret;
 }
 
-QList<int> Family::getChildrenList(int family_id)
+QList<int> FamilyRepo::getChildrenList(int family_id)
 {
     QList<int> ret;
 
@@ -353,7 +359,7 @@ QList<int> Family::getChildrenList(int family_id)
     return ret;
 }
 
-QList<QPair<int,QString>> Family::getResidentList(int family_id)
+QList<QPair<int,QString>> FamilyRepo::getResidentList(int family_id)
 {
     QList<QPair<int,QString>> ret;
 
@@ -389,9 +395,10 @@ QList<QPair<int,QString>> Family::getResidentList(int family_id)
     return ret;
 }
 
-tFamily Family::get(int family_id)
+FamilyModel FamilyRepo::get(int family_id)
 {
-    tFamily ret = {.fatherId = -1};
+    FamilyModel ret = {0};
+    ret.fatherId = -1;
     m_pDB->open();
     QSqlQuery query;
 
@@ -413,8 +420,8 @@ tFamily Family::get(int family_id)
         ret.neighbourhoodNo = pRes.value(pRes.indexOf("neighbourhood_no")).toString();
         ret.resiedenceType = pRes.value(pRes.indexOf("resiedence_type")).toString();
         ret.note = pRes.value(pRes.indexOf("note")).toString();
-        ret.addedChildrenList = getChildrenList(family_id);
-        ret.addedResidentList = getResidentList(family_id);
+        ret.childrenList = getChildrenList(family_id);
+        ret.residentsList = getResidentList(family_id);
     }
     else
     {
@@ -426,7 +433,7 @@ tFamily Family::get(int family_id)
     return ret;
 }
 
-bool Family::append(tFamily *pF)
+bool FamilyRepo::append(FamilyModel *pF)
 {
     bool ret = false;
 
@@ -442,7 +449,7 @@ bool Family::append(tFamily *pF)
                       "values (:father_id,:mother_id,:children_no,'"+pF->note+"','"+pF->flatNo+"','"+pF->buildingNo+"','"+pF->entranceNo+"','"+pF->blockNo+"','"+pF->neighbourhoodNo+"','"+pF->resiedenceType+"')");
         query.bindValue(":father_id",pF->fatherId);
         query.bindValue(":mother_id",pF->motherId);
-        query.bindValue(":children_no",pF->addedChildrenList.size());
+        query.bindValue(":children_no",pF->childrenList.size());
 
         if(query.exec())
         {
@@ -452,14 +459,14 @@ bool Family::append(tFamily *pF)
 
             if(family_id != -1)
             {
-                if(pF->addedChildrenList.size() > 0)
+                if(pF->childrenList.size() > 0)
                 {
-                   ret = addChildrenList(pF->addedChildrenList,family_id);
+                   ret = addChildrenList(pF->childrenList,family_id);
                 }
 
-                if(pF->addedResidentList.size() > 0)
+                if(pF->residentsList.size() > 0)
                 {
-                   ret = addResidentsList(pF->addedResidentList,family_id);
+                   ret = addResidentsList(pF->residentsList,family_id);
                 }
 
                 ret = appendParents(pF->fatherId,pF->motherId,family_id);
@@ -476,7 +483,7 @@ bool Family::append(tFamily *pF)
     return ret;
 }
 
-bool Family::remove(int fam_id)
+bool FamilyRepo::remove(int fam_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -508,7 +515,7 @@ bool Family::remove(int fam_id)
     return ret;
 }
 
-bool Family::removeOneChild(int child_id)
+bool FamilyRepo::removeOneChild(int child_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -530,7 +537,7 @@ bool Family::removeOneChild(int child_id)
     return ret;
 }
 
-bool Family::removeOneResident(int resident_id)
+bool FamilyRepo::removeOneResident(int resident_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -552,7 +559,7 @@ bool Family::removeOneResident(int resident_id)
     return ret;
 }
 
-bool Family::update(tFamily *pF)
+bool FamilyRepo::update(FamilyModel *pF)
 {
     bool ret = true;
     m_pDB->open();
@@ -573,7 +580,7 @@ bool Family::update(tFamily *pF)
 
     query.bindValue(":fi",pF->fatherId);
     query.bindValue(":mi",pF->motherId);
-    query.bindValue(":cno",pF->addedChildrenList.size());
+    query.bindValue(":cno",pF->childrenList.size());
     query.bindValue(":note",pF->note);
     query.bindValue(":flno",pF->flatNo);
     query.bindValue(":buno",pF->buildingNo);
@@ -590,16 +597,16 @@ bool Family::update(tFamily *pF)
     }
     else
     {
-        if(pF->addedChildrenList.size() > 0)
+        if(pF->childrenList.size() > 0)
         {
-           ret = addChildrenList(pF->addedChildrenList,pF->id);
-           qDebug() << "Child list len" << pF->addedChildrenList.length();
+           ret = addChildrenList(pF->childrenList,pF->id);
+           qDebug() << "Child list len" << pF->childrenList.length();
         }
 
-        if(pF->addedResidentList.size() > 0)
+        if(pF->residentsList.size() > 0)
         {
-           ret = addResidentsList(pF->addedResidentList,pF->id);
-           qDebug() << "Res list len" << pF->addedResidentList.length();
+           ret = addResidentsList(pF->residentsList,pF->id);
+           qDebug() << "Res list len" << pF->residentsList.length();
         }
     }
 
@@ -608,7 +615,7 @@ bool Family::update(tFamily *pF)
     return ret;
 }
 
-QSqlRelationalTableModel *Family::getFamiliesByZoneIntoModel(QString neigbourhood,QString blockNo)
+QSqlRelationalTableModel *FamilyRepo::getFamiliesByZoneIntoModel(QString neigbourhood,QString blockNo)
 {
     QSqlRelationalTableModel *pModel = new QSqlRelationalTableModel;
 
@@ -645,7 +652,7 @@ QSqlRelationalTableModel *Family::getFamiliesByZoneIntoModel(QString neigbourhoo
     return pModel;
 }
 
-bool Family::isChild(int person_id)
+bool FamilyRepo::isChild(int person_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -668,7 +675,7 @@ bool Family::isChild(int person_id)
     return ret;
 }
 
-bool Family::isResident(int resident_id)
+bool FamilyRepo::isResident(int resident_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -691,7 +698,7 @@ bool Family::isResident(int resident_id)
     return ret;
 }
 
-bool Family::isParent(int parent_id)
+bool FamilyRepo::isParent(int parent_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -718,7 +725,7 @@ bool Family::isParent(int parent_id)
     return ret;
 }
 
-bool Family::appendParents(int father_id,int mother_id,int family_id)
+bool FamilyRepo::appendParents(int father_id,int mother_id,int family_id)
 {
     bool ret = false;
     m_pDB->open();
@@ -745,7 +752,7 @@ bool Family::appendParents(int father_id,int mother_id,int family_id)
     return ret;
 }
 
-bool Family::removeParents(int family_id)
+bool FamilyRepo::removeParents(int family_id)
 {
     bool ret = false;
     m_pDB->open();

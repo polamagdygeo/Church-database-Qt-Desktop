@@ -2,7 +2,7 @@
 #define ADDPERSON_H
 
 #include <QDialog>
-#include "Person.h"
+#include "PersonRepo.h"
 
 namespace Ui {
 class AddPerson;
@@ -31,8 +31,8 @@ private slots:
 private:
     void resetView();
     Ui::AddPerson *ui;
-    Person* m_pPerson;
-    tPerson m_person;
+    PersonRepo* m_pPersonRepo;
+    PersonModel m_person;
 };
 
 #endif // ADDPERSON_H

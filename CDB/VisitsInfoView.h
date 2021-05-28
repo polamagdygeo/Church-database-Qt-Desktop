@@ -2,8 +2,8 @@
 #define VISITSINFOVIEW_H
 
 #include <QDialog>
-#include "Visits.h"
-#include "Person.h"
+#include "VisitsRepo.h"
+#include "PersonRepo.h"
 
 namespace Ui {
 class VisitsInfoView;
@@ -28,10 +28,10 @@ private slots:
 
 private:
     Ui::VisitsInfoView *ui;
-    Visits *m_pVisits;
-    Person *m_pPerson;
+    VisitsRepo *m_pVisitsRepo;
+    PersonRepo *m_pPersonRepo;
     int m_familyId;
-    QList<tVisit> m_visitsList;
+    QList<VisitModel> m_visitsList;
     void update();
 };
 

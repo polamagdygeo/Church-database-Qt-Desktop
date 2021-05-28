@@ -15,7 +15,7 @@ void FamilyOpAbstractView::updatePossibleChildrenList(QComboBox *possible_childr
     for(auto person : m_persons)
     {
         if(person.second == false &&
-                m_pFamily->isChild(person.first.id) == false &&
+                m_pFamilyRepo->isChild(person.first.id) == false &&
                 isPossibleFather(m_father.name,person.first.name))
         {
            possible_children_combobox->addItem(person.first.name);
@@ -33,11 +33,11 @@ void FamilyOpAbstractView::updatePossibleResidentList(QComboBox *possible_reside
     for(auto person : m_persons)
     {
         if(person.second == false &&
-                m_pFamily->isResident(person.first.id) == false &&
+                m_pFamilyRepo->isResident(person.first.id) == false &&
                 !isPossibleFather(m_father.name,person.first.name) &&
                 person.first.id != m_father.id &&
                 person.first.id != m_mother.id &&
-                m_pFamily->isParent(person.first.id) == false)
+                m_pFamilyRepo->isParent(person.first.id) == false)
         {
            possible_resident_combobox->addItem(person.first.name);
 
@@ -69,14 +69,14 @@ void FamilyOpAbstractView::updateAddedResidentList(QComboBox *added_resident_com
 
 void FamilyOpAbstractView::getAllPersons()
 {
-    QList<tPerson> person_list = m_pPerson->getAll();
+    QList<PersonModel> person_list = m_pPersonRepo->getAll();
 
     m_persons.clear();
 
     int i = 0;
     for(auto person : person_list)
     {
-        QPair<tPerson,bool> temp;
+        QPair<PersonModel,bool> temp;
 
         temp.first = person;
         temp.second = false;
@@ -185,7 +185,7 @@ void FamilyOpAbstractView::addResidentPressedHandler(QComboBox *toAddedChild,
         if(resident_idx < m_possibleResidentList.size() &&
                 resident_idx >= 0)
         {
-            QPair<tPerson,QString> temp_added_resident;
+            QPair<PersonModel,QString> temp_added_resident;
 
             temp_added_resident.first = m_possibleResidentList[resident_idx];
             temp_added_resident.second = resident_relation;
